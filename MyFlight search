@@ -1,0 +1,48 @@
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import java.time.LocalDate;
+import java.time.format.TextStyle;
+import java.util.Locale;
+
+public class MakeMyFlightBooking {
+    public static void main(String[] args) throws InterruptedException 
+        System.setProperty("webdriver.chrome.driver", "C:\\chromedriver\\chromedriver.exe")
+        WebDriver driver = new ChromeDriver();
+        driver.get("https://www.myflight.com/");
+        driver.manage().window().maximize()
+         Thread. Sleep(3000); 
+        try {
+            driver.findElement(By.xpath("//span[@class='commonModal__close']")).click();
+        } catch (Exception e) {
+            System.out.println("No login popup displayed.");
+        }
+        driver.findElement(By.xpath("//label[@for='fromCity']")).click();
+        WebElement fromCity = driver.findElement(By.xpath("//input[@placeholder='From']"));
+        fromCity.sendKeys("Delhi");
+        Thread.sleep(2000);
+        driver.findElement(By.xpath("//p[contains(text(),'Delhi, India')]")).click();
+        WebElement toCity = driver.findElement(By.xpath("//input[@placeholder='To']"));
+        toCity.sendKeys("Mumbai");
+        Thread.sleep(2000);
+        driver.findElement(By.xpath("//p[contains(text(),'Mumbai, India')]")).click();
+        LocalDate tomorrow = LocalDate.now().plusDays(1);
+        String month = tomorrow.getMonth().getDisplayName(TextStyle.SHORT, Locale.ENGLISH);
+        int day = tomorrow.getDayOfMonth();
+        int year = tomorrow.getYear();
+
+        String dateToSelect = month + " " + day + " " + year; 
+        String xpath = String.format("//div[@aria-label='%s']", tomorrow.getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.ENGLISH) 
+                                                    + " " + month + " " + day + " " + year);
+
+        System.out.println("Selecting date: " + dateToSelect);
+        driver.findElement(By.xpath("//label[@for='departure']")).click();
+        Thread.sleep(2000);
+        driver.findElement(By.xpath(xpath)).click()
+        driver.findElement(By.xpath("//a[contains(text(),'Search')]")).click()
+        Thread.sleep(8000)
+   System.out.println(" Flight search completed successfully!");
+        driver.quit();
+    }
+}
